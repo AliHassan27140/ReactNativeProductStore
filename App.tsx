@@ -19,8 +19,10 @@ import {View, useColorScheme} from 'react-native';
 import MainDrawerNavigator from './navigations/MainDrawerNavigator';
 import MainStackNavigator from './navigations/MainStackNavigator';
 import {getLoginStatus} from './services/productAPI';
+import SplashScreen from 'react-native-splash-screen';
 
 const App = () => {
+  const scheme = useColorScheme();
   const [loginStatus, setLoginStatus]: any = useState();
 
   const getLogin = async () => {
@@ -42,15 +44,22 @@ const App = () => {
     console.log('loginStatus', loginStatus);
   }, [loginStatus]);
 
+  DarkTheme.colors.background = '#141414';
+  DarkTheme.colors.card = '#141414';
+  DarkTheme.colors.text = '#ffffff';
+  DefaultTheme.colors.background = 'white';
+  DefaultTheme.colors.card = 'white';
+
   if (loginStatus === true) {
+    SplashScreen.hide();
     return (
-      <NavigationContainer>
+      <NavigationContainer theme={scheme === 'dark' ? DarkTheme : DefaultTheme}>
         <MainStackNavigator route={'Main'} />
       </NavigationContainer>
     );
   } else if (loginStatus == false) {
     return (
-      <NavigationContainer>
+      <NavigationContainer theme={scheme === 'dark' ? DarkTheme : DefaultTheme}>
         <MainStackNavigator route={'Login'} />
         {/* <MainDrawerNavigator /> */}
       </NavigationContainer>

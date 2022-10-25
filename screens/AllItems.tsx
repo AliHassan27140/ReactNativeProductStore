@@ -17,15 +17,26 @@ import ProductDetail from './ProductDetail';
 // DrawerNavigator
 import {DrawerItemList, DrawerItem} from '@react-navigation/drawer';
 import {getItem, setItem} from '../services/AsyncAPI';
-import {useIsFocused} from '@react-navigation/native';
+import {useIsFocused, DefaultTheme, DarkTheme} from '@react-navigation/native';
+import NetInfo from '@react-native-community/netinfo';
 
 const AllItems = ({navigation, route}: any) => {
+  console.log('Default theme', DefaultTheme);
+  console.log(' dark theme', DarkTheme);
+  DarkTheme.colors.primary = 'black';
+  DarkTheme.colors.card = 'black';
+  DarkTheme.colors.background = 'black';
+  DarkTheme.colors.text = 'white';
+
+  DarkTheme.dark = true;
   const [products, setProducts] = useState([]);
   const [loader, setLoader]: any = useState();
   const [refresh, setRefresh] = useState(false);
   const [cartList, setCartList]: any = useState([]);
   const [cartCount, setCartCount] = useState(0);
   const [price, setPrice]: any = useState(0);
+  const [netConnectionType, setNetConnectionType] = useState('');
+  const [netStatus, setNetStatus] = useState('');
   // let price = 0
   useEffect(() => {
     getProductList(setProducts, setLoader);
@@ -64,6 +75,17 @@ const AllItems = ({navigation, route}: any) => {
     }
   }, [isFocused]);
 
+  NetInfo.fetch().then(state => {
+    setNetConnectionType(state.type);
+    if (state.isConnected) {
+      setNetStatus('Online');
+    } else {
+      setNetStatus('Offline');
+    }
+    console.log('Connection type', state.type);
+    console.log('Is connected?', state.isConnected);
+  });
+
   const renderItem = ({item, index}: any) => {
     // setItem(item);
     return (
@@ -75,7 +97,7 @@ const AllItems = ({navigation, route}: any) => {
           marginRight: 10,
           borderRadius: 10,
           overflow: 'hidden',
-          elevation: 1,
+          elevation: 5,
           marginBottom: 10,
         }}>
         <TouchableOpacity
@@ -216,7 +238,7 @@ const AllItems = ({navigation, route}: any) => {
       </View>
     );
   };
-  globalThis.myvar = 0;
+  // globalThis.myvar = 0;
   // BackHandler.addEventListener('hardwareBackPress', () => {
   //   Alert.alert('Exit App', 'Do you want to exit?', [
   //     {
@@ -240,7 +262,7 @@ const AllItems = ({navigation, route}: any) => {
             height: 80,
             justifyContent: 'center',
             alignItems: 'center',
-            marginBottom: 15,
+            marginBottom: 0,
             paddingTop: 0,
           },
         ]}>
@@ -293,8 +315,6 @@ const AllItems = ({navigation, route}: any) => {
           onPress={() => {
             navigation.navigate('Cart', {
               title: 'Cart',
-              item: cartList,
-              totalPrice: price,
             });
           }}
           style={{flex: 2}}>
@@ -319,7 +339,15 @@ const AllItems = ({navigation, route}: any) => {
             source={require('../assets/cart/cart.png')}></Image>
         </TouchableOpacity>
       </View>
-
+      <View
+        style={{
+          // backgroundColor: 'red',
+          flexDirection: 'row',
+          justifyContent: 'space-around',
+        }}>
+        <Text style={{color: 'black'}}>Connection: {netConnectionType}</Text>
+        <Text style={{color: 'black'}}>Status: {netStatus}</Text>
+      </View>
       {/* Flat list of Products */}
       {!loader && products.length > 0 && (
         <FlatList

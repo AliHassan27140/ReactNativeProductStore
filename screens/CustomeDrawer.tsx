@@ -14,19 +14,27 @@ import {Switch, TouchableOpacity} from 'react-native-gesture-handler';
 import {getItem, setItem} from '../services/AsyncAPI';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import {and} from 'react-native-reanimated';
-import {DefaultTheme, DarkTheme} from '@react-navigation/native';
+import {DefaultTheme, DarkTheme, useTheme} from '@react-navigation/native';
 import {useDrawerStatus} from '@react-navigation/drawer';
 import {loginStatus} from '../services/productAPI';
 
 const Customdrawer = (navigation: any, props: any) => {
-  console.log(navigation.reset);
-
+  console.log('navigation', navigation);
   // console.log(DefaultTheme, DarkTheme);
 
   const backgroundColor = '#03fcd7';
   const [active, setActive] = useState(backgroundColor);
   const [inactive, setInactive] = useState('white');
   const [name, setName] = useState('');
+  const [switchEnabled, setSwitchEnabled] = useState(false);
+
+  const {colors} = useTheme();
+
+  const toggleSwitch = () => {
+    setSwitchEnabled(previousState => !previousState);
+    //dark theme enable
+    // DarkTheme = {true}
+  };
   // const colorScheme = useColorScheme();
   //   props.navigation.navigate('ProductNavigation');
   //   let name = '';
@@ -129,20 +137,9 @@ const Customdrawer = (navigation: any, props: any) => {
   useEffect(() => {
     getimage();
   }, []);
-  //   console.log('getimage()', getimage());
-
-  // let drawerStatus = useDrawerStatus();
-
-  // useEffect(() => {
-  //   if (drawerStatus === 'open') {
-  //     StatusBar.setHidden(true);
-  //   } else {
-  //     StatusBar.setHidden(false);
-  //   }
-  // }, [drawerStatus]);
 
   return (
-    <View style={{flex: 1}}>
+    <View style={{flex: 1, backgroundColor: 'white'}}>
       <TouchableOpacity
         onPress={() => {
           Alert.alert('Choose Image', 'Choose Image from Gallery or Camera', [
@@ -199,7 +196,7 @@ const Customdrawer = (navigation: any, props: any) => {
       </TouchableOpacity>
 
       <View style={{}}>
-        <Text style={{textAlign: 'center', fontSize: 20, color: 'black'}}>
+        <Text style={{textAlign: 'center', fontSize: 20, color: colors.text}}>
           {name}
         </Text>
       </View>
@@ -215,10 +212,17 @@ const Customdrawer = (navigation: any, props: any) => {
             flexDirection: 'row',
             alignItems: 'center',
           }}>
-          <Text style={{fontSize: 20, marginRight: 20, color: 'black'}}>
+          <Text style={{fontSize: 20, marginRight: 20, color: colors.text}}>
             Theme
           </Text>
-          <Switch onValueChange={() => {}} style={{}} />
+          <Switch
+            trackColor={{false: '#767577', true: '#81b0ff'}}
+            thumbColor={switchEnabled ? '#f5dd4b' : '#f4f3f4'}
+            // ios_backgroundColor="#3e3e3e"
+            onValueChange={toggleSwitch}
+            value={switchEnabled}
+            style={{}}
+          />
         </View>
         {/* Store Button */}
         <TouchableOpacity
