@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -10,14 +10,17 @@ import {
   TouchableOpacity,
   Animated,
   Alert,
+  KeyboardAvoidingView,
 } from 'react-native';
 import DarkMode from '../components/DarkMode';
 import {getItem, multiGet, multiSet, setItem} from '../services/AsyncAPI';
 import {getLoginStatus, loginStatus} from '../services/productAPI';
+import AllItems from './AllItems';
 
 const Login = ({navigation, route}: any) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
       {/* <Image
@@ -62,94 +65,99 @@ const Login = ({navigation, route}: any) => {
           Please Log in to View your Portfolios, Whatchlist stock quotes and
           market list
         </Text>
-        {/* input 1 */}
-        <View
-          style={{
-            display: 'flex',
-            height: 100,
-            //   backgroundColor: 'red',
-          }}>
-          <Text
+        <KeyboardAvoidingView>
+          {/* input 1 */}
+          <View
             style={{
-              fontSize: 20,
-              fontWeight: 'bold',
-              marginVertical: 5,
-              color: 'black',
+              display: 'flex',
+              height: 100,
+              //   backgroundColor: 'red',
             }}>
-            User Name
-          </Text>
-          <TextInput
+            <Text
+              style={{
+                fontSize: 20,
+                fontWeight: 'bold',
+                marginVertical: 5,
+                color: 'black',
+              }}>
+              User Name
+            </Text>
+            <TextInput
+              style={{
+                borderRadius: 10,
+                backgroundColor: '#e3e2e1',
+                elevation: 5,
+                paddingLeft: 15,
+              }}
+              value={username}
+              onChangeText={text => setUsername(text)}
+              placeholder="Ex. Madi188"></TextInput>
+          </View>
+          {/* input 2 */}
+          <View
             style={{
-              borderRadius: 10,
-              backgroundColor: '#e3e2e1',
-              elevation: 5,
-              paddingLeft: 15,
-            }}
-            value={username}
-            onChangeText={text => setUsername(text)}
-            placeholder="Ex. Madi188"></TextInput>
-        </View>
-        {/* input 2 */}
-        <View
-          style={{
-            display: 'flex',
-            height: 100,
-            //   backgroundColor: 'red',
-          }}>
-          <Text
-            style={{
-              fontSize: 20,
-              fontWeight: 'bold',
-              marginVertical: 5,
-              color: 'black',
+              display: 'flex',
+              height: 100,
+              //   backgroundColor: 'red',
             }}>
-            Password
-          </Text>
-          <TextInput
-            secureTextEntry={true}
-            value={password}
-            onChangeText={text => setPassword(text)}
+            <Text
+              style={{
+                fontSize: 20,
+                fontWeight: 'bold',
+                marginVertical: 5,
+                color: 'black',
+              }}>
+              Password
+            </Text>
+            <TextInput
+              secureTextEntry={true}
+              value={password}
+              onChangeText={text => setPassword(text)}
+              style={{
+                borderRadius: 10,
+                backgroundColor: '#e3e2e1',
+                elevation: 5,
+
+                paddingLeft: 15,
+              }}
+              placeholder="********"></TextInput>
+          </View>
+          <TouchableOpacity
             style={{
+              height: 50,
+              backgroundColor: 'blue',
               borderRadius: 10,
-              backgroundColor: '#e3e2e1',
+              alignItems: 'center',
+              justifyContent: 'center',
+              marginTop: 20,
+              marginBottom: 10,
               elevation: 5,
-
-              paddingLeft: 15,
             }}
-            placeholder="********"></TextInput>
-        </View>
-        <TouchableOpacity
-          style={{
-            height: 50,
-            backgroundColor: 'blue',
-            borderRadius: 10,
-            alignItems: 'center',
-            justifyContent: 'center',
-            marginTop: 20,
-            marginBottom: 10,
-            elevation: 5,
-          }}
-          onPress={async () => {
-            let keys = ['username', 'password'];
-            const savedData = await multiGet(keys);
-            if (savedData[0][1] === username && savedData[1][1] === password) {
-              setPassword('');
-              setUsername('');
-              loginStatus('true');
-              navigation.navigate('Main');
-            } else {
-              setPassword('');
-              setUsername('');
-              Alert.alert('Wrong Username or Password');
-            }
-            console.log('Saved data', savedData[0][1], savedData[1][1]);
+            onPress={async () => {
+              let keys = ['username', 'password'];
+              const savedData: Array<Array<any>> = await multiGet(keys);
+              if (
+                savedData[0][1] === username &&
+                savedData[1][1] === password
+              ) {
+                setPassword('');
+                setUsername('');
+                loginStatus('true');
+                navigation.reset({index: 0, routes: [{name: 'Main'}]});
+              } else {
+                setPassword('');
+                setUsername('');
+                Alert.alert('Wrong Username or Password');
+              }
+              console.log('Saved data', savedData[0][1], savedData[1][1]);
 
-            console.log('username and pass', username, password);
-          }}>
-          <Text style={{fontSize: 20, fontWeight: 'bold', color: 'white'}}>
-            Login
-          </Text>
-        </TouchableOpacity>
+              console.log('username and pass', username, password);
+            }}>
+            <Text style={{fontSize: 20, fontWeight: 'bold', color: 'white'}}>
+              Login
+            </Text>
+          </TouchableOpacity>
+        </KeyboardAvoidingView>
 
         <View
           style={{

@@ -45,6 +45,9 @@ export const getProductDetails = (
         });
 };
 
+
+
+
 // const [status, setLoginStatus] = useState(false);
 let status = 'false';
 export const loginStatus = (Status: any) => {
@@ -56,6 +59,7 @@ export const loginStatus = (Status: any) => {
 }
 
 export const getLoginStatus = async () => {
+    
     status =await getItem('loginStatus')
     console.log('getLoginStatus', status);
     return JSON.parse(status);

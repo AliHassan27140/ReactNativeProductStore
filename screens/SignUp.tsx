@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
   Animated,
   Alert,
+  KeyboardAvoidingView,
 } from 'react-native';
 import DarkMode from '../components/DarkMode';
 import {getItem, multiSet, setItem} from '../services/AsyncAPI';
@@ -17,11 +18,13 @@ import {getItem, multiSet, setItem} from '../services/AsyncAPI';
 const SignUp = ({navigation, route}: any) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [name, setName] = useState('');
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
       {/* <Image
         style={{position: 'absolute', bottom: 0, right: -52}}
         source={require('../assets/Login/background.jpg')}></Image> */}
+      {/* <KeyboardAvoidingView> */}
       <View style={{flex: 1, marginHorizontal: 30}}>
         <View
           style={{
@@ -75,6 +78,33 @@ const SignUp = ({navigation, route}: any) => {
               marginVertical: 5,
               color: 'black',
             }}>
+            Name
+          </Text>
+          <TextInput
+            style={{
+              borderRadius: 10,
+              backgroundColor: '#e3e2e1',
+              elevation: 5,
+              paddingLeft: 15,
+            }}
+            value={name}
+            onChangeText={text => setName(text)}
+            placeholder="Enter your name"></TextInput>
+        </View>
+        {/* input 2 */}
+        <View
+          style={{
+            display: 'flex',
+            height: 100,
+            //   backgroundColor: 'red',
+          }}>
+          <Text
+            style={{
+              fontSize: 20,
+              fontWeight: 'bold',
+              marginVertical: 5,
+              color: 'black',
+            }}>
             User Name
           </Text>
           <TextInput
@@ -88,7 +118,7 @@ const SignUp = ({navigation, route}: any) => {
             onChangeText={text => setUsername(text)}
             placeholder="Ex. Madi188"></TextInput>
         </View>
-        {/* input 2 */}
+        {/* input 3 */}
         <View
           style={{
             display: 'flex',
@@ -128,11 +158,12 @@ const SignUp = ({navigation, route}: any) => {
             elevation: 5,
           }}
           onPress={() => {
-            if (username.length > 0 && password.length > 0) {
+            if (username.length > 0 && password.length > 0 && name.length > 0) {
               let keyValue = [
                 ['username', username],
                 ['password', password],
               ];
+              setItem('name', name);
               multiSet(keyValue);
               Alert.alert('Success', 'Account Created Successfully');
               setUsername('');
@@ -146,6 +177,7 @@ const SignUp = ({navigation, route}: any) => {
             SignUp
           </Text>
         </TouchableOpacity>
+
         <TouchableOpacity
           style={{alignItems: 'center', justifyContent: 'center'}}
           onPress={() => {
@@ -154,6 +186,7 @@ const SignUp = ({navigation, route}: any) => {
           <Text style={{color: 'blue'}}>Already Have an account?</Text>
         </TouchableOpacity>
       </View>
+      {/* </KeyboardAvoidingView> */}
     </SafeAreaView>
   );
 };

@@ -24,7 +24,7 @@ export const getItem = async (key: string) => {
   }
 }
 
-export const multiSet = async (keyValue: string[]) => {
+export const multiSet = async (keyValue:any) => {
   try {
     const value = await AsyncStorage.multiSet(keyValue);
     if (value !== null) {
@@ -49,6 +49,23 @@ export const multiGet = async (keys: string[]) => {
     }
   } catch (e) {
     // error reading value
+  }
+}
+
+export const clearAll = async () => {
+  try {
+    await AsyncStorage.clear();
+  } catch (e) {
+    // clear error
+  }
+}
+
+//removeItem
+export const removeItem = async (key: string) => {
+  try {
+    await AsyncStorage.removeItem(key);
+  } catch (e) {
+    // remove error
   }
 }
 

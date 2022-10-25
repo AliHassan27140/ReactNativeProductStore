@@ -8,46 +8,55 @@
  * @format
  */
 
-import {NavigationContainer} from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {
+  NavigationContainer,
+  DefaultTheme,
+  DarkTheme,
+} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
-import {View} from 'react-native';
+import {View, useColorScheme} from 'react-native';
 import MainDrawerNavigator from './navigations/MainDrawerNavigator';
 import MainStackNavigator from './navigations/MainStackNavigator';
 import {getLoginStatus} from './services/productAPI';
 
 const App = () => {
-  const [loginStatus, setLoginStatus]: any = useState(null);
+  const [loginStatus, setLoginStatus]: any = useState();
 
   const getLogin = async () => {
-    let status = await getLoginStatus();
-    console.log(31312321, status);
+    let status = await AsyncStorage.getItem('loginStatus');
+    console.log('status', status);
 
-    setLoginStatus(status);
+    if (status) {
+      setLoginStatus(JSON.parse(status));
+    } else {
+      setLoginStatus(false);
+    }
   };
 
   useEffect(() => {
     getLogin();
   }, []);
 
-  console.log('loginStatus eee', loginStatus);
+  useEffect(() => {
+    console.log('loginStatus', loginStatus);
+  }, [loginStatus]);
 
-  if (loginStatus == true) {
-    console.log('loginStatus 111', loginStatus);
-
+  if (loginStatus === true) {
     return (
       <NavigationContainer>
         <MainStackNavigator route={'Main'} />
-        {/* <MainDrawerNavigator /> */}
       </NavigationContainer>
     );
   } else if (loginStatus == false) {
-    console.log('loginStatus', loginStatus);
     return (
       <NavigationContainer>
         <MainStackNavigator route={'Login'} />
         {/* <MainDrawerNavigator /> */}
       </NavigationContainer>
     );
+  } else {
+    return <View></View>;
   }
 };
 export default App;

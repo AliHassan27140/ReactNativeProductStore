@@ -8,20 +8,45 @@ import {
   ToastAndroid,
   TouchableOpacity,
   View,
+  Alert,
 } from 'react-native';
 import colors from '../styles/colors';
 import {getProductDetails, getProductList} from '../services/productAPI';
+import {getItem, setItem} from '../services/AsyncAPI';
 
 const ProductDetail = ({navigation, route}: any) => {
   let id = route.params.id;
 
-  const [product, setProduct]: any = useState(null);
+  const [product, setProduct]: any = useState();
   const [loader, setLoader] = useState(true);
+  const [cartList, setCartList]: any = useState([]);
 
   useEffect(() => {
     getProductDetails(setProduct, setLoader, id);
   }, []);
+
   const [count, setCount] = useState(1);
+
+  const getCartList = async () => {
+    const cartList = await getItem('cartList');
+    if (cartList) {
+      let list = JSON.parse(cartList);
+
+      setCartList(list);
+      console.log('list', cartList);
+    } else {
+      console.log('no cart list');
+
+      setCartList([]);
+    }
+  };
+
+  useEffect(() => {
+    getCartList();
+  }, []);
+  // const [price, setPrice] = useState(product.price);
+  // console.log(product);
+
   return (
     <View style={{flex: 1, backgroundColor: 'white'}}>
       {loader && (
@@ -199,6 +224,7 @@ const ProductDetail = ({navigation, route}: any) => {
                   onPress={() => {
                     if (count > 1) {
                       setCount(count - 1);
+                      // product.newPrice = product.price + product.newPrice;
                     }
                   }}>
                   <Text
@@ -228,6 +254,7 @@ const ProductDetail = ({navigation, route}: any) => {
                 <TouchableOpacity
                   onPress={() => {
                     setCount(count + 1);
+                    // product.newPrice = product.newPrice + product.price;
                   }}>
                   <Text
                     style={{
@@ -253,7 +280,22 @@ const ProductDetail = ({navigation, route}: any) => {
             </View>
             <TouchableOpacity
               onPress={() => {
-                return Toast.show('Added to Cart', 1000);
+                let flag = false;
+                cartList.map((item: any) => {
+                  if (id == item.id) {
+                    Toast.show('Product already added in the cart', 1000);
+                    flag = true;
+                  }
+                });
+                console.log('flag check', flag);
+
+                if (flag == false) {
+                  product.quantity = count;
+                  product.newPrice = product.price * count;
+                  cartList.push(product);
+                  setItem('cartList', JSON.stringify(cartList));
+                  Toast.show('Product Added to Cart', 1000);
+                }
               }}
               style={[
                 colors.skyBlue,

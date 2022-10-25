@@ -6,6 +6,7 @@ import DarkMode from '../components/DarkMode';
 import DrawerDesign from '../components/DrawerDesign';
 import ProductDetail from '../screens/ProductDetail';
 import ProductNavigation from './ProductNavigation';
+import Customdrawer from '../screens/CustomeDrawer';
 
 const Drawer = createDrawerNavigator();
 
@@ -14,8 +15,7 @@ const MainDrawerNavigator = () => {
     <Drawer.Navigator
       screenOptions={{headerShown: false}}
       // drawerContent={() => <DrawerDesign />}
-      // {/* // drawerContent={props => <AllItems {...props} />} */}
-    >
+      drawerContent={props => <Customdrawer {...props} />}>
       {/* <Drawer.Screen name="DarkMode" component={DarkMode} /> */}
       {/* <Drawer.Screen name="AllItems" component={AllItems} /> */}
       <Drawer.Screen name="Products" component={ProductNavigation} />

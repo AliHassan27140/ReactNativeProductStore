@@ -1,10 +1,13 @@
 import React, {useEffect, useState} from 'react';
 import {
   ActivityIndicator,
+  Alert,
+  BackHandler,
   FlatList,
   Image,
   SafeAreaView,
   Text,
+  ToastAndroid,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -13,18 +16,56 @@ import colors from '../styles/colors';
 import ProductDetail from './ProductDetail';
 // DrawerNavigator
 import {DrawerItemList, DrawerItem} from '@react-navigation/drawer';
+import {getItem, setItem} from '../services/AsyncAPI';
+import {useIsFocused} from '@react-navigation/native';
 
 const AllItems = ({navigation, route}: any) => {
   const [products, setProducts] = useState([]);
-  const [loader, setLoader] = useState();
+  const [loader, setLoader]: any = useState();
   const [refresh, setRefresh] = useState(false);
-  console.log('loader', loader);
-  const id = 0;
+  const [cartList, setCartList]: any = useState([]);
+  const [cartCount, setCartCount] = useState(0);
+  const [price, setPrice]: any = useState(0);
+  // let price = 0
   useEffect(() => {
     getProductList(setProducts, setLoader);
   }, []);
 
+  const isFocused = useIsFocused();
+
+  const getCartList = async () => {
+    let cartItems = await getItem('cartList');
+    if (cartItems) {
+      let items = JSON.parse(cartItems);
+      setCartList(items);
+
+      setCartCount(items.length);
+    } else {
+      setCartList([]);
+      setCartCount(0);
+    }
+  };
+
+  useEffect(() => {
+    getProductList(setProducts, setLoader);
+  }, []);
+
+  useEffect(() => {
+    if (isFocused) {
+      console.log('isFoused', isFocused, cartList.length);
+
+      getCartList();
+      getItem('price').then(res => {
+        if (res) {
+          let data = res;
+          setPrice(JSON.parse(data));
+        }
+      });
+    }
+  }, [isFocused]);
+
   const renderItem = ({item, index}: any) => {
+    // setItem(item);
     return (
       <View
         style={{
@@ -91,7 +132,64 @@ const AllItems = ({navigation, route}: any) => {
               </Text>
             </Text>
           </View>
-          <View
+          <TouchableOpacity
+            onPress={() => {
+              let flag = false;
+              console.log(cartList);
+              if (cartList.length == 0) {
+                setPrice(price + item.price);
+                console.log('price + item.price', price, item.price);
+                // setCartCount(cartCount + 1);
+                // setCartCount(cartList.length);
+                item.quantity = 1;
+                item.newPrice = item.price;
+                cartList.push(item);
+                setCartCount(1 + cartCount);
+                setItem('cartList', JSON.stringify(cartList));
+                setItem('price', JSON.stringify(price));
+                ToastAndroid.showWithGravityAndOffset(
+                  'Item added to cart',
+                  ToastAndroid.SHORT,
+                  ToastAndroid.TOP,
+                  25,
+                  50,
+                );
+              } else {
+                cartList.map((cartProduct: any) => {
+                  if (cartProduct.id == item.id) {
+                    flag = true;
+                  }
+                  // console.log('map check');
+                });
+                if (flag) {
+                  ToastAndroid.showWithGravityAndOffset(
+                    'Item already added to cart',
+                    ToastAndroid.SHORT,
+                    ToastAndroid.BOTTOM,
+                    25,
+                    50,
+                  );
+                } else {
+                  setPrice(price + item.price);
+                  console.log('price + item.price', price, item.price);
+                  setCartCount(1 + cartCount);
+
+                  item.quantity = 1;
+                  item.newPrice = item.price;
+                  cartList.push(item);
+                  setItem('cartList', JSON.stringify(cartList));
+                  setItem('price', JSON.stringify(price));
+                  ToastAndroid.showWithGravityAndOffset(
+                    'Item added to cart',
+                    ToastAndroid.SHORT,
+                    ToastAndroid.TOP,
+                    25,
+                    50,
+                  );
+                  // console.log('cartList', cartList, 'cartList');
+                }
+              }
+            }}
             style={[
               colors.skyBlue,
               {
@@ -113,53 +211,66 @@ const AllItems = ({navigation, route}: any) => {
               }}>
               Add to Cart
             </Text>
-          </View>
+          </TouchableOpacity>
         </View>
       </View>
     );
   };
+  globalThis.myvar = 0;
+  // BackHandler.addEventListener('hardwareBackPress', () => {
+  //   Alert.alert('Exit App', 'Do you want to exit?', [
+  //     {
+  //       text: 'Cancel',
+  //       onPress: () => null,
+  //       style: 'cancel',
+  //     },
+  //     {text: 'YES', onPress: () => BackHandler.exitApp()},
+  //   ]);
+  //   return true;
+  // });
 
   return (
     <View style={{flex: 1}}>
+      {/* Header  */}
       <View
         style={[
           colors.skyBlue,
           {
             flexDirection: 'row',
-            height: 100,
+            height: 80,
             justifyContent: 'center',
             alignItems: 'center',
             marginBottom: 15,
-            paddingTop: 25,
+            paddingTop: 0,
           },
         ]}>
-        <TouchableOpacity
+        {/* <TouchableOpacity
           onPress={() => {
             loginStatus('false');
-            navigation.navigate('Login', {title: 'Login'});
+            navigation.reset({index: 0, routes: [{name: 'Login'}]});
           }}
           style={{
             height: 40,
             width: 80,
             position: 'absolute',
             top: 10,
-            left: 15,
+            left: 20,
             flexDirection: 'row',
           }}>
           <Image
-            style={{height: 30, width: 30}}
-            source={require('../assets/allitems/back.png')}></Image>
-          <Text style={{fontSize: 18, color: 'white', marginTop: 2}}>
-            Log-Out
+            style={{height: 25, width: 25, marginRight: 10}}
+            source={require('../assets/allitems/logout.png')}></Image>
+          <Text style={{fontSize: 18, color: 'white', marginTop: -1}}>
+            logOut
           </Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
         <TouchableOpacity
-          style={{flex: 1}}
+          style={{flex: 1, marginLeft: 20}}
           onPress={() => {
             navigation.toggleDrawer();
           }}>
           <Image
-            style={{height: 30, width: 30, marginLeft: 20}}
+            style={{height: 30, width: 30}}
             source={require('../assets/allitems/menu.png')}></Image>
         </TouchableOpacity>
 
@@ -177,6 +288,36 @@ const AllItems = ({navigation, route}: any) => {
             All Items
           </Text>
         </View>
+        {/* Cart Icon  */}
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate('Cart', {
+              title: 'Cart',
+              item: cartList,
+              totalPrice: price,
+            });
+          }}
+          style={{flex: 2}}>
+          <Text
+            style={{
+              position: 'absolute',
+              top: '10%',
+              left: '20%',
+              // backgroundColor: 'white',
+              borderRadius: 50,
+              // height: 10,
+              // width: 10,
+              textAlign: 'center',
+              textAlignVertical: 'top',
+              fontSize: 10,
+              color: 'white',
+            }}>
+            {cartCount}
+          </Text>
+          <Image
+            style={{height: 30, width: 30, marginRight: 20}}
+            source={require('../assets/cart/cart.png')}></Image>
+        </TouchableOpacity>
       </View>
 
       {/* Flat list of Products */}
@@ -188,7 +329,9 @@ const AllItems = ({navigation, route}: any) => {
           renderItem={renderItem}
           numColumns={2}
           onRefresh={() => {
+            // setLoader(true);
             getProductList(setProducts, setRefresh);
+            console.log('refresh', refresh);
           }}
           refreshing={refresh}
         />
