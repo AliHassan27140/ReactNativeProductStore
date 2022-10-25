@@ -12,10 +12,9 @@ import {
   Alert,
 } from 'react-native';
 import DarkMode from '../components/DarkMode';
-import {getItem, multiGet, multiSet, setItem} from '../services/AsyncAPI';
-import {getLoginStatus, loginStatus} from '../services/productAPI';
+import {getItem, multiSet, setItem} from '../services/AsyncAPI';
 
-const Login = ({navigation, route}: any) => {
+const SignUp = ({navigation, route}: any) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   return (
@@ -51,7 +50,7 @@ const Login = ({navigation, route}: any) => {
             marginVertical: 10,
             color: 'black',
           }}>
-          Login
+          Sign Up
         </Text>
         <Text
           style={{
@@ -106,7 +105,6 @@ const Login = ({navigation, route}: any) => {
             Password
           </Text>
           <TextInput
-            secureTextEntry={true}
             value={password}
             onChangeText={text => setPassword(text)}
             style={{
@@ -129,52 +127,35 @@ const Login = ({navigation, route}: any) => {
             marginBottom: 10,
             elevation: 5,
           }}
-          onPress={async () => {
-            let keys = ['username', 'password'];
-            const savedData = await multiGet(keys);
-            if (savedData[0][1] === username && savedData[1][1] === password) {
-              setPassword('');
+          onPress={() => {
+            if (username.length > 0 && password.length > 0) {
+              let keyValue = [
+                ['username', username],
+                ['password', password],
+              ];
+              multiSet(keyValue);
+              Alert.alert('Success', 'Account Created Successfully');
               setUsername('');
-              loginStatus('true');
-              navigation.navigate('Main');
+              setPassword('');
             } else {
-              setPassword('');
-              setUsername('');
-              Alert.alert('Wrong Username or Password');
+              Alert.alert('Username and Password cannot be empty');
             }
-            console.log('Saved data', savedData[0][1], savedData[1][1]);
-
-            console.log('username and pass', username, password);
+            // navigation.navigate('Main');
           }}>
           <Text style={{fontSize: 20, fontWeight: 'bold', color: 'white'}}>
-            Login
+            SignUp
           </Text>
         </TouchableOpacity>
-
-        <View
-          style={{
-            alignItems: 'center',
-            justifyContent: 'center',
-            // backgroundColor: 'blue',
+        <TouchableOpacity
+          style={{alignItems: 'center', justifyContent: 'center'}}
+          onPress={() => {
+            navigation.navigate('Login');
           }}>
-          <Text style={{color: 'black'}}>
-            Don't have an account?{' '}
-            <TouchableOpacity
-              // style={{
-              //   backgroundColor: 'red',
-              //   flexDirection: 'row',
-              //   justifyContent: 'flex-end',
-              // }}
-              onPress={() => {
-                navigation.navigate('SignUp');
-              }}>
-              <Text style={{color: 'black', fontWeight: 'bold'}}>Sign Up</Text>
-            </TouchableOpacity>
-          </Text>
-        </View>
+          <Text style={{color: 'blue'}}>Already Have an account?</Text>
+        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
 };
 
-export default Login;
+export default SignUp;

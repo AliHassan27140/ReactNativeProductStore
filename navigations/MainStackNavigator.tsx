@@ -5,13 +5,18 @@ import ProductDetail from '../screens/ProductDetail';
 import Login from '../screens/Login';
 import MainDrawerNavigator from './MainDrawerNavigator';
 import {createDrawerNavigator} from '@react-navigation/drawer';
-
+import SignUp from '../screens/SignUp';
+import {getLoginStatus} from '../services/productAPI';
 const Stack = createStackNavigator();
 
-const MainStackNavigator = () => {
+const MainStackNavigator = ({route}: any) => {
+  console.log('route', route);
   return (
-    <Stack.Navigator screenOptions={{headerShown: false, gestureEnabled: true}}>
+    <Stack.Navigator
+      initialRouteName={route}
+      screenOptions={{headerShown: false, gestureEnabled: true}}>
       <Stack.Screen name="Login" component={Login} />
+      <Stack.Screen name="SignUp" component={SignUp} />
       <Stack.Screen name="Main" component={MainDrawerNavigator} />
     </Stack.Navigator>
   );

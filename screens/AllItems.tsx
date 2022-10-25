@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {getProductList} from '../services/productAPI';
+import {getProductList, loginStatus} from '../services/productAPI';
 import colors from '../styles/colors';
 import ProductDetail from './ProductDetail';
 // DrawerNavigator
@@ -135,11 +135,12 @@ const AllItems = ({navigation, route}: any) => {
         ]}>
         <TouchableOpacity
           onPress={() => {
+            loginStatus('false');
             navigation.navigate('Login', {title: 'Login'});
           }}
           style={{
             height: 40,
-            width: 40,
+            width: 80,
             position: 'absolute',
             top: 10,
             left: 15,
@@ -148,7 +149,9 @@ const AllItems = ({navigation, route}: any) => {
           <Image
             style={{height: 30, width: 30}}
             source={require('../assets/allitems/back.png')}></Image>
-          <Text style={{fontSize: 18, color: 'white', marginTop: 2}}>Back</Text>
+          <Text style={{fontSize: 18, color: 'white', marginTop: 2}}>
+            Log-Out
+          </Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={{flex: 1}}

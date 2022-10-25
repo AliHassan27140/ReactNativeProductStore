@@ -1,4 +1,6 @@
 import axios from "axios";
+import { useState } from "react";
+import { getItem, setItem } from "./AsyncAPI";
 
 
 export const getProductList = (
@@ -32,7 +34,7 @@ export const getProductDetails = (
     axios
         .get(`https://fakestoreapi.com/products/${id}`)
         .then((response) => {
-            console.log(response.data);
+            // console.log(response.data);
             
             setProductData(response.data)
             setLoader(false)
@@ -42,3 +44,19 @@ export const getProductDetails = (
             console.log(error);
         });
 };
+
+// const [status, setLoginStatus] = useState(false);
+let status = 'false';
+export const loginStatus = (Status: any) => {
+    // console.log('loginStatus', setLoginStatus);
+    // setLoginStatus(Status)
+    status = Status;
+    setItem('loginStatus', Status);
+    // return setLoginStatus;
+}
+
+export const getLoginStatus = async () => {
+    status =await getItem('loginStatus')
+    console.log('getLoginStatus', status);
+    return JSON.parse(status);
+}
