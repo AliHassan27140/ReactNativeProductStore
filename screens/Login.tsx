@@ -149,9 +149,9 @@ const Login = ({navigation, route}: any) => {
                 setUsername('');
                 Alert.alert('Wrong Username or Password');
               }
-              console.log('Saved data', savedData[0][1], savedData[1][1]);
+              // console.log('Saved data', savedData[0][1], savedData[1][1]);
 
-              console.log('username and pass', username, password);
+              // console.log('username and pass', username, password);
             }}>
             <Text style={{fontSize: 20, fontWeight: 'bold', color: 'white'}}>
               Login

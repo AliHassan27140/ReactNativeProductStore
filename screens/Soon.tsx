@@ -103,7 +103,7 @@ const Soon = ({navigation, route}: any) => {
       })
       .catch(error => {
         setLoading(false);
-        console.log(error);
+        // console.log(error);
       });
   };
 
@@ -125,7 +125,7 @@ const Soon = ({navigation, route}: any) => {
       })
       .catch(error => {
         setLoading(false);
-        console.log('Get Countries Error', error);
+        // console.log('Get Countries Error', error);
       });
   };
 
@@ -147,7 +147,7 @@ const Soon = ({navigation, route}: any) => {
       })
       .catch(error => {
         setLoading(false);
-        console.log('Get Municipalities Error', error);
+        // console.log('Get Municipalities Error', error);
       });
   };
 

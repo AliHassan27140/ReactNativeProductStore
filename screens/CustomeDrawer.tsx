@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useContext} from 'react';
 import {
   Alert,
   Image,
@@ -17,23 +17,25 @@ import {and} from 'react-native-reanimated';
 import {DefaultTheme, DarkTheme, useTheme} from '@react-navigation/native';
 import {useDrawerStatus} from '@react-navigation/drawer';
 import {loginStatus} from '../services/productAPI';
+import {ThemeContext} from '../App';
+import {lightTheme, darkTheme} from '../styles/theme';
 
 const Customdrawer = (navigation: any, props: any) => {
-  console.log('navigation', navigation);
-  // console.log(DefaultTheme, DarkTheme);
-
   const backgroundColor = '#03fcd7';
   const [active, setActive] = useState(backgroundColor);
   const [inactive, setInactive] = useState('white');
   const [name, setName] = useState('');
   const [switchEnabled, setSwitchEnabled] = useState(false);
-
-  const {colors} = useTheme();
+  const {theme, setTheme}: any = useContext(ThemeContext);
+  const {colors, dark} = useTheme();
 
   const toggleSwitch = () => {
     setSwitchEnabled(previousState => !previousState);
-    //dark theme enable
-    // DarkTheme = {true}
+    if (switchEnabled === false) {
+      setTheme('dark');
+    } else {
+      setTheme('light');
+    }
   };
   // const colorScheme = useColorScheme();
   //   props.navigation.navigate('ProductNavigation');
@@ -56,7 +58,7 @@ const Customdrawer = (navigation: any, props: any) => {
       quality: 1,
     };
     launchImageLibrary(options, (response: any) => {
-      console.log('Response = ', response);
+      // console.log('Response = ', response);
 
       if (response.didCancel) {
         // Alert.alert('User', 'cancelled camera picker');
@@ -72,17 +74,17 @@ const Customdrawer = (navigation: any, props: any) => {
         return;
       }
       // console.log('base64 -> ', response.assets[0].base64);
-      console.log('uri -> ', response.assets[0].uri);
+      // console.log('uri -> ', response.assets[0].uri);
       // console.log('width -> ', response.assets[0].width);
       // console.log('height -> ', response.assets[0].height);
       // console.log('fileSize -> ', response.assets[0].fileSize);
       // console.log('type -> ', response.assets[0].type);
       // console.log('fileName -> ', response.assets[0].fileName);
       setFilePath(response.assets[0].uri);
-      console.log('filepath', response.assets[0].uri);
+      // console.log('filepath', response.assets[0].uri);
       const setImage1: string = filePath + '';
       setItem('image', setImage1);
-      console.log('image:setItem1 ', setImage1);
+      // console.log('image:setItem1 ', setImage1);
     });
   };
 
@@ -101,7 +103,7 @@ const Customdrawer = (navigation: any, props: any) => {
     // let isStoragePermitted = await requestExternalWritePermission();
     // if (isCameraPermitted && isStoragePermitted) {
     launchCamera(options, (response: any) => {
-      console.log('Launch Camera Response = ', response);
+      // console.log('Launch Camera Response = ', response);
 
       if (response.didCancel) {
         Alert.alert('User cancelled camera picker');
@@ -129,7 +131,7 @@ const Customdrawer = (navigation: any, props: any) => {
   let image1: any;
   const getimage = async () => {
     image1 = await getItem('image');
-    console.log('setFilePath:getImage', image1);
+    // console.log('setFilePath:getImage', image1);
     // setFilePath(image1);
     return image1;
   };
@@ -139,7 +141,7 @@ const Customdrawer = (navigation: any, props: any) => {
   }, []);
 
   return (
-    <View style={{flex: 1, backgroundColor: 'white'}}>
+    <View style={{flex: 1, backgroundColor: colors.background}}>
       <TouchableOpacity
         onPress={() => {
           Alert.alert('Choose Image', 'Choose Image from Gallery or Camera', [
@@ -231,7 +233,7 @@ const Customdrawer = (navigation: any, props: any) => {
             navigation.navigation.navigate('AllItems');
           }}
           style={{
-            backgroundColor: '#2badf9',
+            backgroundColor: colors.primary,
             height: 50,
             marginVertical: 10,
             borderWidth: 5,
@@ -251,7 +253,7 @@ const Customdrawer = (navigation: any, props: any) => {
             // navigation.toggleDrawer();
           }}
           style={{
-            backgroundColor: '#2badf9',
+            backgroundColor: colors.primary,
             height: 50,
             marginVertical: 10,
             borderWidth: 5,
@@ -270,7 +272,7 @@ const Customdrawer = (navigation: any, props: any) => {
             // navigation.toggleDrawer();
           }}
           style={{
-            backgroundColor: '#2badf9',
+            backgroundColor: colors.primary,
             height: 50,
             marginVertical: 10,
             borderWidth: 5,

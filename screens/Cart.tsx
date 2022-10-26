@@ -11,6 +11,7 @@ import {
 import {getProductList} from '../services/productAPI';
 import colors from '../styles/colors';
 import Lottie from 'lottie-react-native';
+import {useTheme} from '@react-navigation/native';
 
 const Cart = ({navigation, route}: any) => {
   //   console.log('route', route.params.totalPrice);
@@ -23,13 +24,14 @@ const Cart = ({navigation, route}: any) => {
     // console.log('productITEM', product);
 
     //   image = profile.picture;
+    const {colors, dark} = useTheme();
     return (
       <View
         key={index}
         style={{
           // marginVertical: '1%',
           marginHorizontal: '3%',
-          backgroundColor: 'white',
+          backgroundColor: colors.card,
           borderRadius: 10,
           display: 'flex',
           flexDirection: 'row',
@@ -38,11 +40,12 @@ const Cart = ({navigation, route}: any) => {
           // borderBottomWidth: 0.7,
           marginBottom: 8,
           elevation: 5,
+          overflow: 'hidden',
         }}>
         <View
           style={{
             flex: 1.5,
-            //   backgroundColor: 'blue',
+            backgroundColor: colors.card,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-around',
@@ -63,14 +66,16 @@ const Cart = ({navigation, route}: any) => {
             //   backgroundColor: 'red',
           }}>
           <View style={{height: 40, marginTop: 20}}>
-            <Text style={{fontSize: 16, fontWeight: 'bold', color: 'black'}}>
+            <Text
+              style={{fontSize: 16, fontWeight: 'bold', color: colors.text}}>
               {product.title}
             </Text>
           </View>
           <View>
-            <Text style={{color: 'black'}}>{product.category}</Text>
-            <Text style={{fontSize: 16, fontWeight: 'bold', color: 'black'}}>
-              <Text style={{}}>Rating </Text>
+            <Text style={{color: colors.text}}>{product.category}</Text>
+            <Text
+              style={{fontSize: 16, fontWeight: 'bold', color: colors.text}}>
+              <Text style={{color: colors.text}}>Rating </Text>
               {product.rating.rate}
             </Text>
           </View>
@@ -85,7 +90,7 @@ const Cart = ({navigation, route}: any) => {
                 fontWeight: 'bold',
                 fontSize: 18,
                 marginRight: 10,
-                color: 'black',
+                color: colors.text,
               }}>
               Quantity
             </Text>
@@ -107,7 +112,8 @@ const Cart = ({navigation, route}: any) => {
                   width: 25,
                   textAlign: 'center',
                   borderWidth: 1,
-                  color: 'black',
+                  color: colors.text,
+                  borderColor: colors.text,
                 }}>
                 -
               </Text>
@@ -120,7 +126,8 @@ const Cart = ({navigation, route}: any) => {
                 width: 25,
                 textAlign: 'center',
                 borderWidth: 1,
-                color: 'black',
+                color: colors.text,
+                borderColor: colors.text,
               }}>
               {product.quantity}
             </Text>
@@ -148,7 +155,8 @@ const Cart = ({navigation, route}: any) => {
                   width: 25,
                   textAlign: 'center',
                   borderWidth: 1,
-                  color: 'black',
+                  color: colors.text,
+                  borderColor: colors.text,
                 }}>
                 +
               </Text>
@@ -172,7 +180,7 @@ const Cart = ({navigation, route}: any) => {
               setProducts([...products]);
 
               // setProducts(products);
-              console.log('products indexy', index);
+              // console.log('products indexy', index);
             }}>
             <Image
               style={{height: 40, width: 40, marginTop: 20}}
@@ -186,10 +194,12 @@ const Cart = ({navigation, route}: any) => {
               height: 40,
               overflow: 'hidden',
             }}>
-            <Text style={{fontSize: 15, color: 'black', textAlign: 'center'}}>
+            <Text
+              style={{fontSize: 15, color: colors.text, textAlign: 'center'}}>
               Price
             </Text>
-            <Text style={{fontSize: 15, color: 'black', textAlign: 'center'}}>
+            <Text
+              style={{fontSize: 15, color: colors.text, textAlign: 'center'}}>
               <Text>$</Text>
               {product.newPrice}
             </Text>
@@ -204,12 +214,12 @@ const Cart = ({navigation, route}: any) => {
 
     await getItem('cartList').then((res: any) => {
       let data = JSON.parse(res);
-      console.log('data getItem', data);
+      // console.log('data getItem', data);
 
       if (data.length > 0) {
         setProducts(data);
       } else {
-        console.log('No product found');
+        // console.log('No product found');
       }
     });
   };
@@ -228,7 +238,7 @@ const Cart = ({navigation, route}: any) => {
     let total = 0;
     products.map((item: any) => {
       total = total + item.newPrice;
-      console.log('total', total);
+      // console.log('total', total);
     });
 
     setCartTotal(total);
@@ -243,22 +253,23 @@ const Cart = ({navigation, route}: any) => {
   const renderItem = ({item, index}: any) => {
     return <Item product={item} productsArray={products} index={index} />;
   };
+
+  const {colors, dark} = useTheme();
+
   return (
     <View style={{flex: 1}}>
       <View
-        style={[
-          colors.skyBlue,
-          {
-            marginBottom: 15,
-            flexDirection: 'row',
-            height: 60,
-            justifyContent: 'center',
-            // alignItems: 'center',
-            alignContent: 'center',
-            // marginBottom: 15,
-            // paddingTop: 25,
-          },
-        ]}>
+        style={{
+          backgroundColor: colors.primary,
+          marginBottom: 15,
+          flexDirection: 'row',
+          height: 60,
+          justifyContent: 'center',
+          // alignItems: 'center',
+          alignContent: 'center',
+          // marginBottom: 15,
+          // paddingTop: 25,
+        }}>
         <TouchableOpacity
           style={{flex: 1, justifyContent: 'center'}}
           onPress={() => {
@@ -291,7 +302,7 @@ const Cart = ({navigation, route}: any) => {
           data={products}
           renderItem={renderItem}
           ListEmptyComponent={() => {
-            console.log('No product found');
+            // console.log('No product found');
 
             return (
               <Lottie
@@ -313,7 +324,7 @@ const Cart = ({navigation, route}: any) => {
           style={{
             height: 60,
             width: '100%',
-            backgroundColor: '#2badf9',
+            backgroundColor: colors.primary,
             alignSelf: 'flex-end',
             flexDirection: 'row',
             justifyContent: 'space-around',
@@ -323,7 +334,7 @@ const Cart = ({navigation, route}: any) => {
           <View style={{flex: 2, marginLeft: 20, flexDirection: 'row'}}>
             <Text
               style={{
-                color: 'white',
+                color: colors.text,
                 // backgroundColor: 'red',
               }}>
               Total Price: $
@@ -349,7 +360,8 @@ const Cart = ({navigation, route}: any) => {
             }}>
             <Text
               style={{
-                backgroundColor: 'white',
+                backgroundColor: colors.background,
+                color: colors.text,
                 borderRadius: 20,
                 width: 80,
                 height: 30,

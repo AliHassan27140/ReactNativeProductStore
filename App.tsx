@@ -14,15 +14,29 @@ import {
   DefaultTheme,
   DarkTheme,
 } from '@react-navigation/native';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, createContext} from 'react';
 import {View, useColorScheme} from 'react-native';
 import MainDrawerNavigator from './navigations/MainDrawerNavigator';
 import MainStackNavigator from './navigations/MainStackNavigator';
 import {getLoginStatus} from './services/productAPI';
 import SplashScreen from 'react-native-splash-screen';
+import {darkTheme, lightTheme} from './styles/theme';
+
+export const ThemeContext = createContext({});
+
+const ThemeProvider = ({children}: any) => {
+  const [theme, setTheme] = useState('light');
+
+  return (
+    <ThemeContext.Provider value={{theme, setTheme}}>
+      <NavigationContainer theme={theme == 'dark' ? darkTheme : lightTheme}>
+        {children}
+      </NavigationContainer>
+    </ThemeContext.Provider>
+  );
+};
 
 const App = () => {
-  const scheme = useColorScheme();
   const [loginStatus, setLoginStatus]: any = useState();
 
   const getLogin = async () => {
@@ -44,25 +58,18 @@ const App = () => {
     console.log('loginStatus', loginStatus);
   }, [loginStatus]);
 
-  DarkTheme.colors.background = '#141414';
-  DarkTheme.colors.card = '#141414';
-  DarkTheme.colors.text = '#ffffff';
-  DefaultTheme.colors.background = 'white';
-  DefaultTheme.colors.card = 'white';
-
   if (loginStatus === true) {
     SplashScreen.hide();
     return (
-      <NavigationContainer theme={scheme === 'dark' ? DarkTheme : DefaultTheme}>
+      <ThemeProvider>
         <MainStackNavigator route={'Main'} />
-      </NavigationContainer>
+      </ThemeProvider>
     );
   } else if (loginStatus == false) {
     return (
-      <NavigationContainer theme={scheme === 'dark' ? DarkTheme : DefaultTheme}>
+      <ThemeProvider>
         <MainStackNavigator route={'Login'} />
-        {/* <MainDrawerNavigator /> */}
-      </NavigationContainer>
+      </ThemeProvider>
     );
   } else {
     return <View></View>;

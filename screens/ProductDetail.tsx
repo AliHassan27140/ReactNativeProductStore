@@ -13,6 +13,7 @@ import {
 import colors from '../styles/colors';
 import {getProductDetails, getProductList} from '../services/productAPI';
 import {getItem, setItem} from '../services/AsyncAPI';
+import {useTheme} from '@react-navigation/native';
 
 const ProductDetail = ({navigation, route}: any) => {
   let id = route.params.id;
@@ -33,9 +34,9 @@ const ProductDetail = ({navigation, route}: any) => {
       let list = JSON.parse(cartList);
 
       setCartList(list);
-      console.log('list', cartList);
+      // console.log('list', cartList);
     } else {
-      console.log('no cart list');
+      // console.log('no cart list');
 
       setCartList([]);
     }
@@ -46,9 +47,9 @@ const ProductDetail = ({navigation, route}: any) => {
   }, []);
   // const [price, setPrice] = useState(product.price);
   // console.log(product);
-
+  const {colors, dark} = useTheme();
   return (
-    <View style={{flex: 1, backgroundColor: 'white'}}>
+    <View style={{flex: 1, backgroundColor: colors.background}}>
       {loader && (
         <View
           style={{
@@ -62,17 +63,15 @@ const ProductDetail = ({navigation, route}: any) => {
       {!loader && product && (
         <View>
           <View
-            style={[
-              colors.skyBlue,
-              {
-                flexDirection: 'row',
-                height: 100,
-                // justifyContent: 'center',
-                alignItems: 'center',
-                marginBottom: 15,
-                paddingTop: 25,
-              },
-            ]}>
+            style={{
+              backgroundColor: colors.primary,
+              flexDirection: 'row',
+              height: 100,
+              // justifyContent: 'center',
+              alignItems: 'center',
+              marginBottom: 15,
+              paddingTop: 25,
+            }}>
             <TouchableOpacity
               onPress={() => {
                 navigation.goBack();
@@ -110,7 +109,7 @@ const ProductDetail = ({navigation, route}: any) => {
           </View>
           <View
             style={{
-              backgroundColor: 'white',
+              backgroundColor: colors.card,
               height: '70%',
               marginHorizontal: '5%',
               //   elevation: 5,
@@ -131,7 +130,7 @@ const ProductDetail = ({navigation, route}: any) => {
                     fontWeight: 'bold',
                     width: '98%',
                     lineHeight: 30,
-                    color: 'black',
+                    color: colors.text,
                   }}>
                   {/* Quartz wrist-watch Connatation Leather LeatherLeather */}
                   {product.title}
@@ -149,10 +148,12 @@ const ProductDetail = ({navigation, route}: any) => {
                     ratingCount={5}
                     imageSize={20}
                     readonly={true}
+                    ratingBackgroundColor={colors.primary}
+                    style={{backgroundColor: colors.primary}}
                   />
                 </View>
                 <View>
-                  <Text style={{color: 'black'}}>
+                  <Text style={{color: colors.text}}>
                     Based on {product.rating.count} Reviews
                   </Text>
                 </View>
@@ -175,7 +176,7 @@ const ProductDetail = ({navigation, route}: any) => {
             </View>
             <View
               style={{
-                backgroundColor: 'white',
+                backgroundColor: colors.card,
                 height: 200,
                 width: '100%',
                 alignItems: 'center',
@@ -190,14 +191,15 @@ const ProductDetail = ({navigation, route}: any) => {
                 fontSize: 18,
                 fontWeight: 'bold',
                 textAlign: 'center',
-                color: 'black',
+                color: colors.text,
               }}>
-              $<Text style={{color: 'black'}}>{product.price}</Text>
+              $<Text style={{color: colors.text}}>{product.price}</Text>
             </Text>
-            <Text style={{fontSize: 18, fontWeight: 'bold', color: 'black'}}>
+            <Text
+              style={{fontSize: 18, fontWeight: 'bold', color: colors.text}}>
               In Stock
             </Text>
-            <Text style={{height: 60, lineHeight: 19, color: 'black'}}>
+            <Text style={{height: 60, lineHeight: 19, color: colors.text}}>
               {product.description}
             </Text>
             <View
@@ -216,7 +218,7 @@ const ProductDetail = ({navigation, route}: any) => {
                     fontWeight: 'bold',
                     fontSize: 18,
                     marginRight: 10,
-                    color: 'black',
+                    color: colors.text,
                   }}>
                   Quantity
                 </Text>
@@ -234,7 +236,8 @@ const ProductDetail = ({navigation, route}: any) => {
                       width: 25,
                       textAlign: 'center',
                       borderWidth: 1,
-                      color: 'black',
+                      borderColor: colors.text,
+                      color: colors.text,
                     }}>
                     -
                   </Text>
@@ -247,7 +250,8 @@ const ProductDetail = ({navigation, route}: any) => {
                     width: 25,
                     textAlign: 'center',
                     borderWidth: 1,
-                    color: 'black',
+                    borderColor: colors.text,
+                    color: colors.text,
                   }}>
                   {count}
                 </Text>
@@ -263,7 +267,8 @@ const ProductDetail = ({navigation, route}: any) => {
                       width: 25,
                       textAlign: 'center',
                       borderWidth: 1,
-                      color: 'black',
+                      borderColor: colors.text,
+                      color: colors.text,
                     }}>
                     +
                   </Text>
@@ -273,7 +278,7 @@ const ProductDetail = ({navigation, route}: any) => {
                 style={{
                   justifyContent: 'center',
                 }}>
-                <Text style={{fontWeight: 'bold', color: '#2badf9'}}>
+                <Text style={{fontWeight: 'bold', color: colors.primary}}>
                   Add to WishList
                 </Text>
               </View>
@@ -287,7 +292,7 @@ const ProductDetail = ({navigation, route}: any) => {
                     flag = true;
                   }
                 });
-                console.log('flag check', flag);
+                // console.log('flag check', flag);
 
                 if (flag == false) {
                   product.quantity = count;
@@ -297,15 +302,13 @@ const ProductDetail = ({navigation, route}: any) => {
                   Toast.show('Product Added to Cart', 1000);
                 }
               }}
-              style={[
-                colors.skyBlue,
-                {
-                  borderRadius: 20,
-                  height: 45,
-                  justifyContent: 'center',
-                  marginVertical: 15,
-                },
-              ]}>
+              style={{
+                backgroundColor: colors.primary,
+                borderRadius: 20,
+                height: 45,
+                justifyContent: 'center',
+                marginVertical: 30,
+              }}>
               <Text
                 style={{
                   fontSize: 20,

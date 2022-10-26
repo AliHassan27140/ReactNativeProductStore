@@ -17,12 +17,17 @@ import ProductDetail from './ProductDetail';
 // DrawerNavigator
 import {DrawerItemList, DrawerItem} from '@react-navigation/drawer';
 import {getItem, setItem} from '../services/AsyncAPI';
-import {useIsFocused, DefaultTheme, DarkTheme} from '@react-navigation/native';
+import {
+  useIsFocused,
+  DefaultTheme,
+  DarkTheme,
+  useTheme,
+} from '@react-navigation/native';
 import NetInfo from '@react-native-community/netinfo';
 
 const AllItems = ({navigation, route}: any) => {
-  console.log('Default theme', DefaultTheme);
-  console.log(' dark theme', DarkTheme);
+  // console.log('Default theme', DefaultTheme);
+  // console.log(' dark theme', DarkTheme);
   DarkTheme.colors.primary = 'black';
   DarkTheme.colors.card = 'black';
   DarkTheme.colors.background = 'black';
@@ -63,7 +68,7 @@ const AllItems = ({navigation, route}: any) => {
 
   useEffect(() => {
     if (isFocused) {
-      console.log('isFoused', isFocused, cartList.length);
+      // console.log('isFoused', isFocused, cartList.length);
 
       getCartList();
       getItem('price').then(res => {
@@ -82,10 +87,10 @@ const AllItems = ({navigation, route}: any) => {
     } else {
       setNetStatus('Offline');
     }
-    console.log('Connection type', state.type);
-    console.log('Is connected?', state.isConnected);
+    // console.log('Connection type', state.type);
+    // console.log('Is connected?', state.isConnected);
   });
-
+  const {colors, dark} = useTheme();
   const renderItem = ({item, index}: any) => {
     // setItem(item);
     return (
@@ -93,7 +98,7 @@ const AllItems = ({navigation, route}: any) => {
         style={{
           width: '48%',
           height: 250,
-          backgroundColor: 'white',
+          backgroundColor: colors.card,
           marginRight: 10,
           borderRadius: 10,
           overflow: 'hidden',
@@ -124,7 +129,7 @@ const AllItems = ({navigation, route}: any) => {
               lineHeight: 25,
               fontSize: 15,
               marginHorizontal: 10,
-              color: 'black',
+              color: colors.text,
             }}>
             {item.title}
           </Text>
@@ -146,10 +151,11 @@ const AllItems = ({navigation, route}: any) => {
                 fontSize: 15,
                 fontWeight: 'bold',
                 height: 20,
-                color: 'black',
+                color: colors.text,
               }}>
               $
-              <Text style={{fontSize: 15, fontWeight: 'bold', color: 'black'}}>
+              <Text
+                style={{fontSize: 15, fontWeight: 'bold', color: colors.text}}>
                 {item.price}
               </Text>
             </Text>
@@ -157,10 +163,10 @@ const AllItems = ({navigation, route}: any) => {
           <TouchableOpacity
             onPress={() => {
               let flag = false;
-              console.log(cartList);
+              // console.log(cartList);
               if (cartList.length == 0) {
                 setPrice(price + item.price);
-                console.log('price + item.price', price, item.price);
+                // console.log('price + item.price', price, item.price);
                 // setCartCount(cartCount + 1);
                 // setCartCount(cartList.length);
                 item.quantity = 1;
@@ -193,7 +199,7 @@ const AllItems = ({navigation, route}: any) => {
                   );
                 } else {
                   setPrice(price + item.price);
-                  console.log('price + item.price', price, item.price);
+                  // console.log('price + item.price', price, item.price);
                   setCartCount(1 + cartCount);
 
                   item.quantity = 1;
@@ -212,16 +218,13 @@ const AllItems = ({navigation, route}: any) => {
                 }
               }
             }}
-            style={[
-              colors.skyBlue,
-              {
-                //   backgroundColor: 'pink',
-                flex: 1.6,
-                justifyContent: 'center',
-                borderTopLeftRadius: 20,
-                borderBottomLeftRadius: 20,
-              },
-            ]}>
+            style={{
+              backgroundColor: colors.primary,
+              flex: 1.6,
+              justifyContent: 'center',
+              borderTopLeftRadius: 20,
+              borderBottomLeftRadius: 20,
+            }}>
             <Text
               style={{
                 fontSize: 15,
@@ -255,17 +258,15 @@ const AllItems = ({navigation, route}: any) => {
     <View style={{flex: 1}}>
       {/* Header  */}
       <View
-        style={[
-          colors.skyBlue,
-          {
-            flexDirection: 'row',
-            height: 80,
-            justifyContent: 'center',
-            alignItems: 'center',
-            marginBottom: 0,
-            paddingTop: 0,
-          },
-        ]}>
+        style={{
+          backgroundColor: colors.primary,
+          flexDirection: 'row',
+          height: 80,
+          justifyContent: 'center',
+          alignItems: 'center',
+          marginBottom: 0,
+          paddingTop: 0,
+        }}>
         {/* <TouchableOpacity
           onPress={() => {
             loginStatus('false');
@@ -345,8 +346,10 @@ const AllItems = ({navigation, route}: any) => {
           flexDirection: 'row',
           justifyContent: 'space-around',
         }}>
-        <Text style={{color: 'black'}}>Connection: {netConnectionType}</Text>
-        <Text style={{color: 'black'}}>Status: {netStatus}</Text>
+        <Text style={{color: colors.text}}>
+          Connection: {netConnectionType}
+        </Text>
+        <Text style={{color: colors.text}}>Status: {netStatus}</Text>
       </View>
       {/* Flat list of Products */}
       {!loader && products.length > 0 && (
@@ -359,7 +362,7 @@ const AllItems = ({navigation, route}: any) => {
           onRefresh={() => {
             // setLoader(true);
             getProductList(setProducts, setRefresh);
-            console.log('refresh', refresh);
+            // console.log('refresh', refresh);
           }}
           refreshing={refresh}
         />
