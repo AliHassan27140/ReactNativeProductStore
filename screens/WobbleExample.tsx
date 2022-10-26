@@ -8,6 +8,8 @@ import Animated, {
 } from 'react-native-reanimated';
 // import Icon from 'react-native-vector-icons/FontAwesome5';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Lottie from 'lottie-react-native';
+
 function WobbleExample() {
   const rotation = useSharedValue(0);
 
@@ -35,7 +37,12 @@ function WobbleExample() {
           rotation.value = withRepeat(withTiming(10), 6, true);
         }}
       />
-      <Icon name="size-l" size={100} color="#260" />
+      <Lottie
+        style={{marginTop: 100}}
+        source={require('../assets/animation/lotteAnimation.json')}
+        autoPlay
+        loop
+      />
     </>
   );
 }

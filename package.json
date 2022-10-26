@@ -19,6 +19,7 @@
     "@react-navigation/stack": "^6.3.2",
     "add": "^2.0.6",
     "axios": "^0.27.2",
+    "lottie-react-native": "^5.1.4",
     "react": "18.1.0",
     "react-dark-mode-toggle": "^0.2.0",
     "react-native": "0.70.2",

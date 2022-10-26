@@ -10,6 +10,7 @@ import {
 } from '../services/AsyncAPI';
 import {getProductList} from '../services/productAPI';
 import colors from '../styles/colors';
+import Lottie from 'lottie-react-native';
 
 const Cart = ({navigation, route}: any) => {
   //   console.log('route', route.params.totalPrice);
@@ -290,15 +291,24 @@ const Cart = ({navigation, route}: any) => {
           data={products}
           renderItem={renderItem}
           ListEmptyComponent={() => {
+            console.log('No product found');
+
             return (
-              <View style={{flex: 1, marginTop: '50%'}}>
-                <Image
-                  style={{alignSelf: 'center'}}
-                  source={require('../assets/cart/emptyCart.png')}></Image>
-              </View>
+              <Lottie
+                source={require('../assets/animation/emptyCart.json')}
+                autoPlay
+                loop
+              />
             );
           }}
         />
+        {products.length == 0 && (
+          <Lottie
+            source={require('../assets/animation/emptyCart.json')}
+            autoPlay
+            loop
+          />
+        )}
         <View
           style={{
             height: 60,
